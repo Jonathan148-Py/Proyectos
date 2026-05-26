@@ -1,0 +1,125 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="assets/Logo-San-Bernardo.png" alt="Municipalidad de San Bernardo" class="logo-muni" />
+    <img src="assets/logo.png" alt="Sistema de Alertas" class="logo-app" />
+  </div>
+
+  <div class="user-greeting">
+    <span style="color: white">Bienvenido, <strong>{{ usuarioNombre }}</strong> ({{ usuarioRango }})</span>
+    <button class="btn-logout" (click)="cerrarSesion()">🚪 Cerrar Sesión</button>
+  </div>
+</header>
+
+<div class="main-content">
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li>
+          <a [routerLink]="['/menu']" routerLinkActive="active">
+            <span class="icon">🏠</span> Menú
+          </a>
+        </li>
+        <li *ngIf="usuarioRango === 'admin' || usuarioRango === 'camaras'">
+          <a [routerLink]="['/alertasvecinales']" routerLinkActive="active">
+            <span class="icon">🚨</span> Alertas Vecinales
+          </a>
+        </li>
+        <li *ngIf="usuarioRango === 'admin' || usuarioRango === 'camaras'">
+          <a [routerLink]="['/camarassolicitadas']" routerLinkActive="active">
+            <span class="icon">📹</span> Cámaras Solicitadas
+          </a>
+        </li>
+        <li *ngIf="usuarioRango === 'admin' || usuarioRango === 'camaras' || usuarioRango === 'ciudadano'">
+          <a [routerLink]="['/mapa']" routerLinkActive="active">
+            <span class="icon">🗺️</span> Mapa en Vivo
+          </a>
+        </li>
+        <li *ngIf="usuarioRango === 'admin' || usuarioRango === 'multas'">
+          <a [routerLink]="['/multas']" routerLinkActive="active">
+            <span class="icon">💰</span> Multas
+          </a>
+        </li>
+        <li *ngIf="usuarioRango === 'admin'">
+          <a [routerLink]="['/crearusuario']" routerLinkActive="active">
+            <span class="icon">👥</span> Crear Usuario
+          </a>
+        </li>
+        <li *ngIf="usuarioRango === 'admin'">
+          <a [routerLink]="['/listadeusuarios']" routerLinkActive="active">
+            <span class="icon">📋</span> Lista de Usuarios
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p>By <strong>ReportaYa</strong></p>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <div class="lista-container">
+      <h2>👥 Lista de Usuarios</h2>
+
+      <!-- 🔍 Filtros con el mismo estilo que en Multas -->
+      <div class="filters">
+        <input type="text" placeholder="Filtrar por nombre" [(ngModel)]="filtroNombre" (input)="aplicarFiltrosCombinados()" />
+        <input type="text" placeholder="Filtrar por apellido" [(ngModel)]="filtroApellido" (input)="aplicarFiltrosCombinados()" />
+        <input type="text" placeholder="Filtrar por teléfono" [(ngModel)]="filtroTelefono" (input)="aplicarFiltrosCombinados()" />
+        <input type="text" placeholder="Filtrar por correo" [(ngModel)]="filtroEmail" (input)="aplicarFiltrosCombinados()" />
+        <input type="text" placeholder="Filtrar por ID" [(ngModel)]="filtroID" (input)="aplicarFiltrosCombinados()" />
+      </div>
+
+      <div class="tabs">
+        <button
+          *ngFor="let pestana of pestanas"
+          class="tab-btn"
+          [class.active]="pestanaActiva === pestana.id"
+          (click)="cambiarPestana(pestana.id)"
+        >
+          {{ pestana.nombre }}
+        </button>
+      </div>
+
+      <div class="usuarios-list">
+        <div *ngIf="cargando" class="cargando">
+          Cargando usuarios...
+        </div>
+
+        <div *ngIf="!cargando && usuariosFiltrados.length === 0" class="no-usuarios">
+          No hay usuarios en este rango.
+        </div>
+
+        <div *ngIf="!cargando" class="usuarios-grid">
+          <div *ngFor="let usuario of usuariosFiltrados" class="usuario-card">
+            <div class="usuario-avatar">
+              <span class="avatar-icon">👤</span>
+            </div>
+            <div class="usuario-info">
+              <div class="usuario-nombre-rango">
+                <strong>{{ getNombreCompleto(usuario) }}</strong>
+                <span class="usuario-rango">{{ usuario.rango }}</span>
+              </div>
+              <div class="usuario-contacto">{{ getEmailOTelefono(usuario) }}</div>
+              <div class="usuario-id">ID: {{ usuario.id }}</div>
+            </div>
+
+            <div class="usuario-acciones">
+              <div class="usuario-estado">
+                <span *ngIf="isBlocked(usuario)" class="estado-bloqueado">🔒 Bloqueado</span>
+                <span *ngIf="!isBlocked(usuario)" class="estado-activo">✅ Activo</span>
+              </div>
+              <button
+                class="btn-bloquear"
+                (click)="toggleBloqueo(usuario)"
+                [disabled]="usuario.id === currentUserId"
+              >
+                {{ isBlocked(usuario) ? 'Desbloquear' : 'Bloquear (48h)' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

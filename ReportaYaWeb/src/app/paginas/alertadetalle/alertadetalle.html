@@ -1,0 +1,344 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="assets/Logo-San-Bernardo.png" alt="Municipalidad de San Bernardo" class="logo-muni" />
+    <img src="assets/logo.png" alt="Sistema de Alertas" class="logo-app" />
+  </div>
+
+  <div class="user-greeting">
+    <span style="color: white">Bienvenido, <strong>{{ usuarioNombre }}</strong> ({{ usuarioRango }})</span>
+    <button class="btn-logout" (click)="cerrarSesion()">🚪 Cerrar Sesión</button>
+  </div>
+</header>
+
+<div class="main-content">
+
+  <!-- MENÚ LATERAL -->
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li>
+          <a [routerLink]="['/menu']" routerLinkActive="active">
+            <span class="icon">🏠</span> Menú
+          </a>
+        </li>
+
+        <!-- 🔹 Ruta: alertasvecinales -->
+        <li *ngIf="puedeVer('alertasvecinales') && !isCurrentRoute('/alertasvecinales')">
+          <a [routerLink]="['/alertasvecinales']" routerLinkActive="active" [class.active]="isCurrentRoute('/alertadetalle')">
+            <span class="icon">🚨</span> Alertas Vecinales
+          </a>
+        </li>
+
+        <!-- 🔹 Ruta: camarassolicitadas -->
+        <li *ngIf="puedeVer('camarassolicitadas')">
+          <a [routerLink]="['/camarassolicitadas']" routerLinkActive="active">
+            <span class="icon">📹</span> Cámaras Solicitadas
+          </a>
+        </li>
+
+        <!-- 🔹 Ruta: mapa -->
+        <li *ngIf="puedeVer('mapa')">
+          <a [routerLink]="['/mapa']" routerLinkActive="active">
+            <span class="icon">🗺️</span> Mapa en Vivo
+          </a>
+        </li>
+
+        <!-- 🔹 Ruta: multas -->
+        <li *ngIf="puedeVer('multas')">
+          <a [routerLink]="['/multas']" routerLinkActive="active">
+            <span class="icon">💰</span> Multas
+          </a>
+        </li>
+
+        <!-- 🔹 Ruta: crearusuario (solo para admin) -->
+        <li *ngIf="puedeVer('crearusuario')">
+          <a [routerLink]="['/crearusuario']" routerLinkActive="active">
+            <span class="icon">👥</span> Crear Usuario
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/listadeusuarios']" routerLinkActive="active">
+            <span class="icon">📋</span> Lista de Usuarios
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-area">
+    <div class="detalle-container">
+      <div class="detalle-header">
+        <h2>
+          <span class="icon">📌</span> Detalle de Alerta
+        </h2>
+        <div class="actions-toolbar">
+          <button class="btn-secondary" (click)="volver()">
+            ← Volver
+          </button>
+          <button class="btn-danger" (click)="eliminarReporte(alerta?.id)" *ngIf="puedeEliminar()">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+
+      <!-- PESTAÑAS -->
+      <div class="tabs-container">
+        <div class="tabs">
+          <button class="tab-btn" [class.active]="tabActual === 'general'" (click)="cambiarTab('general')">
+            <span class="icon">📋</span> General
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'imagenes'" (click)="cambiarTab('imagenes')">
+            <span class="icon">📷</span> Imágenes
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'inspector'" (click)="cambiarTab('inspector')" *ngIf="alerta?.inspectorAsignado || esAdmin()">
+            <span class="icon">👮‍♂️</span> Inspector
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'comentarios'" (click)="cambiarTab('comentarios')">
+            <span class="icon">💬</span> Comentarios
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'acciones'" (click)="cambiarTab('acciones')" *ngIf="esAdmin()">
+            <span class="icon">🔧</span> Acciones
+          </button>
+        </div>
+
+        <!-- CONTENIDO DE CADA PESTAÑA -->
+        <div class="tab-content">
+          <!-- PESTAÑA: General -->
+          <div *ngIf="tabActual === 'general'" class="tab-pane">
+            <div class="field">
+              <label>ID:</label>
+              <span class="value monospace">{{ alerta?.id || 'N/A' }}</span>
+            </div>
+            <div class="field">
+              <label>Fecha:</label>
+              <span class="value">{{ alerta?.fecha || 'No disponible' }}</span>
+            </div>
+            <div class="field">
+              <label>Correo del Reportante:</label>
+              <span class="value">{{ alerta?.usuarioEmail || 'Anónimo' }}</span>
+            </div>
+            <div class="field">
+              <label>Ubicación:</label>
+              <span class="value">{{ alerta?.ubicacion || 'No especificada' }}</span>
+            </div>
+            <div class="field">
+              <label>Coordenadas:</label>
+              <span class="value" *ngIf="alerta?.coordenadas">
+                {{ alerta.coordenadas.lat.toFixed(6) }}, {{ alerta.coordenadas.lng.toFixed(6) }}
+              </span>
+              <span class="value" *ngIf="!alerta?.coordenadas">No disponibles</span>
+            </div>
+            <div class="field">
+              <label>Categoría:</label>
+              <select [(ngModel)]="alerta.categoria" (change)="onCategoriaChange()" [disabled]="!esAdmin()">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let cat of categorias" [value]="cat.FAMILIA">{{ cat.FAMILIA }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Subcategoría:</label>
+              <select [(ngModel)]="alerta.subcategoria" (change)="onSubcategoriaChange()" [disabled]="!esAdmin()">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let sub of subcategoriasFiltradas" [value]="sub">{{ sub }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Estado:</label>
+              <div class="estado-buttons">
+                <button
+                  class="status-btn"
+                  [class.active]="alerta?.estado?.pendiente"
+                  (click)="actualizarEstado('pendiente', !alerta?.estado?.pendiente)"
+                  [disabled]="!esAdmin()"
+                >Pendiente</button>
+                <button
+                  class="status-btn"
+                  [class.active]="alerta?.estado?.enProceso"
+                  (click)="actualizarEstado('enProceso', !alerta?.estado?.enProceso)"
+                  [disabled]="!esAdmin()"
+                >En Proceso</button>
+                <button
+                  class="status-btn"
+                  [class.active]="alerta?.estado?.enTerreno"
+                  (click)="actualizarEstado('enTerreno', !alerta?.estado?.enTerreno)"
+                  [disabled]="!esAdmin()"
+                >En Terreno</button>
+                <button
+                  class="status-btn"
+                  [class.active]="alerta?.estado?.resuelto"
+                  (click)="actualizarEstado('resuelto', !alerta?.estado?.resuelto)"
+                  [disabled]="!esAdmin()"
+                >Resuelto</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Prioridad:</label>
+              <select [(ngModel)]="alerta.prioridad" (change)="onPrioridadChange()" [disabled]="!esAdmin()">
+                <option value="baja">Baja</option>
+                <option value="media">Media</option>
+                <option value="alta">Alta</option>
+              </select>
+            </div>
+            <!-- ✅ Botón en General -->
+            <div class="field">
+              <label>Estado de Completado:</label>
+              <div class="estado-completado">
+                <button
+                  class="btn-success"
+                  [class.active]="alerta?.estado?.resultado"
+                  (click)="marcarComoCompletado()"
+                  [disabled]="!esAdmin()"
+                >
+                  {{ alerta?.estado?.resultado ? '✅ Finalizado' : 'Marcar como Finalizado' }}
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Visibilidad:</label>
+              <select [(ngModel)]="alerta.visibilidad" (ngModelChange)="onVisibilidadChange()" [disabled]="!puedeEditar()">
+                <option [ngValue]="true">Público</option>
+                <option [ngValue]="false">Privado</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Imágenes -->
+          <div *ngIf="tabActual === 'imagenes'" class="tab-pane">
+            <div class="foto-container" *ngIf="alerta?.fotoURL">
+              <img [src]="alerta.fotoURL" alt="Foto de la alerta" class="foto-grande" />
+            </div>
+            <div class="no-foto" *ngIf="!alerta?.fotoURL">
+              <span>📷 Sin imagen disponible</span>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Inspector -->
+          <div *ngIf="tabActual === 'inspector'" class="tab-pane">
+            <div class="field" *ngIf="alerta?.inspectorAsignado">
+              <label>Nombre:</label>
+              <span class="value">{{ inspectorAsignado?.nombre || inspectorAsignado?.email || 'Inspector no encontrado' }}</span>
+            </div>
+            <div class="field" *ngIf="alerta?.inspectorAsignado">
+              <label>UID:</label>
+              <span class="value monospace">{{ alerta.inspectorAsignado }}</span>
+            </div>
+            <div class="field" *ngIf="alerta?.inspectorAsignado">
+              <label>Estado:</label>
+              <span class="badge" [class.ocupado]="inspectorAsignado?.alertaAsignada !== null && inspectorAsignado?.alertaAsignada !== undefined" [class.disponible]="inspectorAsignado?.alertaAsignada === null || inspectorAsignado?.alertaAsignada === undefined">
+                {{ inspectorAsignado?.alertaAsignada !== null && inspectorAsignado?.alertaAsignada !== undefined ? 'Ocupado' : 'Disponible' }}
+              </span>
+            </div>
+            <div class="field" *ngIf="alerta?.inspectorAsignado">
+              <label>Reporte:</label>
+              <span class="value monospace">{{ inspectorAsignado?.alertaAsignada || 'Este reporte' }}</span>
+            </div>
+            <div class="field actions" *ngIf="alerta?.inspectorAsignado">
+              <button class="btn-warning" (click)="liberarInspector(alerta.inspectorAsignado)" *ngIf="esAdmin()">
+                🔓 Liberar
+              </button>
+            </div>
+
+            <!-- Asignar inspector -->
+            <div class="field" *ngIf="!alerta?.inspectorAsignado && esAdmin()">
+              <p>Selecciona un inspector disponible:</p>
+              <div class="inspectores-list" *ngIf="inspectores$ | async as inspectores; else noInspectores">
+                <div *ngFor="let inspector of inspectores" class="inspector-item" [class.disabled]="inspector['alertaAsignada'] !== null && inspector['alertaAsignada'] !== undefined">
+                  <div class="inspector-info">
+                    <span class="nombre">{{ inspector.nombre || inspector.email }}</span>
+                    <span class="badge" [class.disponible]="inspector['alertaAsignada'] === null || inspector['alertaAsignada'] === undefined" [class.ocupado]="inspector['alertaAsignada'] !== null && inspector['alertaAsignada'] !== undefined">
+                      {{ inspector['alertaAsignada'] === null || inspector['alertaAsignada'] === undefined ? 'Disponible' : 'Ocupado' }}
+                    </span>
+                  </div>
+                  <button
+                    class="btn-primary"
+                    (click)="asignarReporte(inspector.uid)"
+                    [disabled]="inspector['alertaAsignada'] !== null && inspector['alertaAsignada'] !== undefined"
+                  >
+                    Asignar
+                  </button>
+                </div>
+              </div>
+              <ng-template #noInspectores>
+                <p>No hay inspectores disponibles.</p>
+              </ng-template>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Comentarios -->
+          <div *ngIf="tabActual === 'comentarios'" class="tab-pane">
+            <div class="field">
+              <label>Descripción:</label>
+              <textarea
+                [(ngModel)]="alerta.descripcion"
+                (input)="onDescripcionChange()"
+                [disabled]="!esAdmin()"
+                rows="4"
+              ></textarea>
+            </div>
+            <div class="field">
+              <label>Comentarios del Inspector:</label>
+              <textarea
+                [(ngModel)]="alerta.comentariosInspector"
+                (input)="onComentariosChange()"
+                [disabled]="!esAdmin()"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Acciones -->
+          <div *ngIf="tabActual === 'acciones'" class="tab-pane">
+            <div class="acciones-content">
+              <h4>Acciones Administrativas</h4>
+              <div class="accion-item">
+                <p>Actualizar estado de la alerta</p>
+                <div class="estado-buttons">
+                  <button
+                    class="status-btn"
+                    [class.active]="alerta?.estado?.pendiente"
+                    (click)="actualizarEstado('pendiente', !alerta?.estado?.pendiente)"
+                  >Pendiente</button>
+                  <button
+                    class="status-btn"
+                    [class.active]="alerta?.estado?.enProceso"
+                    (click)="actualizarEstado('enProceso', !alerta?.estado?.enProceso)"
+                  >En Proceso</button>
+                  <button
+                    class="status-btn"
+                    [class.active]="alerta?.estado?.enTerreno"
+                    (click)="actualizarEstado('enTerreno', !alerta?.estado?.enTerreno)"
+                  >En Terreno</button>
+                  <button
+                    class="status-btn"
+                    [class.active]="alerta?.estado?.resuelto"
+                    (click)="actualizarEstado('resuelto', !alerta?.estado?.resuelto)"
+                  >Resuelto</button>
+                </div>
+              </div>
+              <div class="accion-item">
+                <p>Asignar o liberar inspector</p>
+                <button class="btn-primary" (click)="liberarInspector(alerta.inspectorAsignado)" *ngIf="alerta?.inspectorAsignado">
+                  🔓 Liberar Inspector
+                </button>
+              </div>
+              <!-- ✅ BOTÓN CORREGIDO EN ACCIONES -->
+              <div class="accion-item">
+                <p>Marcar alerta como finalizada</p>
+                <button class="btn-success" (click)="marcarComoCompletado()">
+                  {{ alerta?.estado?.resultado ? '✅ Finalizada' : 'Marcar como Finalizada' }}
+                </button>
+              </div>
+              <div class="accion-item">
+                <p>Eliminar este reporte</p>
+                <button class="btn-danger" (click)="eliminarReporte(alerta?.id)">
+                  🗑️ Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

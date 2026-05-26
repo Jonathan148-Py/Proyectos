@@ -1,0 +1,36 @@
+/* Inicio */
+.container {
+  margin: 0;
+  color: #ffffff;
+  text-align: center;
+  min-height: 100vh;         
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.Titulo {
+  font-size: 600%;
+}
+
+button {
+  display: block;
+  width: 100%;                  
+  max-width: 400px;            
+  padding: 2% 0;               
+  margin: 5% auto 0 auto;      
+  font-size: 3rem;             
+  background-color: #ffffff; 
+  color: #000000; 
+  border: none;
+  border-radius: 8px;          
+  cursor: pointer;
+  text-align: center;
+  font-size: 200%;
+}
+
+button:hover {
+  background-color: #ffe6e6; 
+}
+

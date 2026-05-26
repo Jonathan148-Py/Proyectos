@@ -1,0 +1,103 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="assets/Logo-San-Bernardo.png" alt="Municipalidad de San Bernardo" class="logo-muni" />
+    <img src="assets/logo.png" alt="Sistema de Alertas" class="logo-app" />
+  </div>
+
+  <div class="user-greeting">
+    <span style="color: white">Bienvenido, <strong>{{ usuario?.nombre || 'Usuario' }}</strong> ({{ usuario?.rango || 'Invitado' }})</span>
+    <button class="btn-logout" (click)="cerrarSesion()">🚪 Cerrar Sesión</button>
+  </div>
+</header>
+
+<div class="main-content">
+
+  <!-- MENÚ LATERAL -->
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li>
+          <a [routerLink]="['/menu']" routerLinkActive="active">
+            <span class="icon">🏠</span> Menú
+          </a>
+        </li>
+        <li *ngIf="puedeVer('alertasvecinales')">
+          <a [routerLink]="['/alertasvecinales']" routerLinkActive="active">
+            <span class="icon">🚨</span> Alertas Vecinales
+          </a>
+        </li>
+        <li *ngIf="puedeVer('camarassolicitadas')">
+          <a [routerLink]="['/camarassolicitadas']" routerLinkActive="active">
+            <span class="icon">📹</span> Cámaras Solicitadas
+          </a>
+        </li>
+        <li *ngIf="puedeVer('mapa')">
+          <a [routerLink]="['/mapa']" routerLinkActive="active">
+            <span class="icon">🗺️</span> Mapa en Vivo
+          </a>
+        </li>
+        <li *ngIf="puedeVer('multas')">
+          <a [routerLink]="['/multas']" routerLinkActive="active">
+            <span class="icon">💰</span> Multas
+          </a>
+        </li>
+        <li *ngIf="puedeVer('crearusuario')">
+          <a [routerLink]="['/crearusuario']" routerLinkActive="active">
+            <span class="icon">👥</span> Crear Usuario
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/listadeusuarios']" routerLinkActive="active">
+            <span class="icon">📋</span> Lista de Usuarios
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- ✅ FOOTER DEL SIDEBAR -->
+    <div class="sidebar-footer">
+      <p>By <strong>ReportaYa</strong></p>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-area">
+    <div class="camaras-container">
+      <h2>📹 Cámaras Solicitadas</h2>
+
+      <!-- 🔍 Filtros -->
+      <div class="filters">
+        <input type="text" placeholder="Filtrar por nombre" [(ngModel)]="filtroNombre" />
+        <input type="text" placeholder="Filtrar por apellido" [(ngModel)]="filtroApellido" />
+        <input type="text" placeholder="Filtrar por teléfono" [(ngModel)]="filtroTelefono" />
+        <input type="text" placeholder="Filtrar por RUT" [(ngModel)]="filtroRut" />
+        <input type="text" placeholder="Filtrar por calle" [(ngModel)]="filtroCalle" />
+        <input type="text" placeholder="Filtrar por motivo" [(ngModel)]="filtroMotivo" />
+        <input type="date" placeholder="Filtrar por fecha" [(ngModel)]="filtroFecha" />
+      </div>
+
+      <!-- 📋 Lista de cámaras -->
+      <div class="camaras-list">
+        <div
+          *ngFor="let camara of camarasSolicitadas | filterCamaras : filtroNombre : filtroApellido : filtroTelefono : filtroRut : filtroCalle : filtroMotivo : filtroFecha"
+          class="camara-card"
+        >
+          <div class="camara-header">
+            <span class="nombre">{{ camara.nombre || 'Sin nombre' }}</span>
+            <span class="fecha">{{ camara.fecha || 'Sin fecha' }}</span>
+          </div>
+          <div class="camara-body">
+            <p><strong>Apellido:</strong> {{ truncarTexto(camara.apellido || 'No especificado', 40) }}</p>
+            <p><strong>Teléfono:</strong> {{ truncarTexto(camara.telefono || 'No especificado', 30) }}</p>
+            <p><strong>RUT:</strong> {{ truncarTexto(camara.rut || 'No especificado', 30) }}</p>
+            <p><strong>Calle:</strong> {{ truncarTexto(camara.calle || 'No especificada', 50) }}</p>
+            <p><strong>Motivo:</strong> {{ truncarTexto(camara.motivo || 'Sin motivo', 80) }}</p>
+          </div>
+          <div class="camara-footer">
+            <span class="id">ID: {{ camara.id || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

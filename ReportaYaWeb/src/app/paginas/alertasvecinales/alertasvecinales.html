@@ -1,0 +1,127 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="assets/Logo-San-Bernardo.png" alt="Municipalidad de San Bernardo" class="logo-muni" />
+    <img src="assets/logo.png" alt="Sistema de Alertas" class="logo-app" />
+  </div>
+
+  <div class="user-greeting">
+    <span style="color: white">Bienvenido, <strong>{{ usuarioNombre }}</strong> ({{ usuarioRango }})</span>
+    <button class="btn-logout" (click)="cerrarSesion()">🚪 Cerrar Sesión</button>
+  </div>
+</header>
+
+<div class="main-content">
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li>
+          <a [routerLink]="['/menu']" routerLinkActive="active">
+            <span class="icon">🏠</span> Menú
+          </a>
+        </li>
+        <li *ngIf="puedeVer('alertasvecinales')">
+          <a [routerLink]="['/alertasvecinales']" routerLinkActive="active">
+            <span class="icon">🚨</span> Alertas Vecinales
+          </a>
+        </li>
+        <li *ngIf="puedeVer('camarassolicitadas')">
+          <a [routerLink]="['/camarassolicitadas']" routerLinkActive="active">
+            <span class="icon">📹</span> Cámaras Solicitadas
+          </a>
+        </li>
+        <li *ngIf="puedeVer('mapa')">
+          <a [routerLink]="['/mapa']" routerLinkActive="active">
+            <span class="icon">🗺️</span> Mapa en Vivo
+          </a>
+        </li>
+        <li *ngIf="puedeVer('multas')">
+          <a [routerLink]="['/multas']" routerLinkActive="active">
+            <span class="icon">💰</span> Multas
+          </a>
+        </li>
+        <li *ngIf="puedeVer('crearusuario')">
+          <a [routerLink]="['/crearusuario']" routerLinkActive="active">
+            <span class="icon">👥</span> Crear Usuario
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/listadeusuarios']" routerLinkActive="active">
+            <span class="icon">📋</span> Lista de Usuarios
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p>By <strong>ReportaYa</strong></p>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <div class="alertas-container">
+      <div class="alertas-header">
+        <h2>🚨 Alertas Vecinales</h2>
+        <div class="contador-no-vistas" *ngIf="alertasSinCompletarCount > 0">
+          <span>⚠️ {{ alertasSinCompletarCount }} sin completar</span>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <a
+          class="tab-btn"
+          [class.active]="vistaActual === 'sin-completar'"
+          [routerLink]="['/alertasvecinales', 'sin-completar']"
+        >
+          Sin Completar
+        </a>
+        <a
+          class="tab-btn"
+          [class.active]="vistaActual === 'completadas'"
+          [routerLink]="['/alertasvecinales', 'completadas']"
+        >
+          Completadas
+        </a>
+      </div>
+
+      <div class="filters">
+        <input type="text" placeholder="Filtrar por correo" [(ngModel)]="filtroCorreo" (input)="aplicarFiltros()" />
+        <input type="text" placeholder="Filtrar por descripción" [(ngModel)]="filtroDescripcion" (input)="aplicarFiltros()" />
+        <input type="text" placeholder="Filtrar por ubicación" [(ngModel)]="filtroUbicacion" (input)="aplicarFiltros()" />
+        <input type="date" placeholder="Filtrar por fecha" [(ngModel)]="filtroFecha" (input)="aplicarFiltros()" />
+      </div>
+
+      <div class="alertas-list">
+        <div
+          *ngFor="let alerta of alertasFiltradas"
+          class="alerta-card"
+          (click)="irADetalle(alerta)"
+        >
+          <div class="alerta-header">
+            <span class="correo">{{ alerta.usuarioEmail || 'Anónimo' }}</span>
+            <span class="fecha">{{ alerta.fechaString || 'Fecha no disponible' }}</span>
+          </div>
+          <div class="alerta-body">
+            <p><strong>ID:</strong> {{ alerta.id }}</p>
+            <p><strong>Ubicación:</strong> {{ alerta.ubicacion || 'No especificada' }}</p>
+            <p><strong>Descripción:</strong> {{ alerta.descripcion ? (alerta.descripcion.length > 150 ? alerta.descripcion.substring(0, 150) + '...' : alerta.descripcion) : 'Sin descripción' }}</p>
+          </div>
+          <div class="alerta-footer">
+            <div class="prioridad-acciones">
+              <span class="prioridad" [class]="(alerta.prioridad || 'baja')">{{ 'Prioridad: ' + (alerta.prioridad || 'baja') }}</span>
+              <div class="acciones" *ngIf="usuario?.rango === 'admin'">
+              <button (click)="cambiarPrioridad(alerta, 'baja', $event)">Baja</button>
+              <button (click)="cambiarPrioridad(alerta, 'media', $event)">Media</button>
+              <button (click)="cambiarPrioridad(alerta, 'alta', $event)">Alta</button>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje si no hay alertas -->
+        <div class="no-alertas" *ngIf="alertasFiltradas.length === 0">
+          <p>No hay alertas para mostrar.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

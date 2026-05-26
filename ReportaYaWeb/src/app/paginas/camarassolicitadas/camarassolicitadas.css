@@ -1,0 +1,284 @@
+/* =============================================
+   LAYOUT GENERAL
+============================================= */
+.main-content {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.sidebar {
+  width: 240px;
+  /* ✅ Gradiente institucional */
+  background: linear-gradient(135deg, #074aad, #9abef5, #074aad);
+  color: white;
+  padding: 20px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  height: 100vh;
+  top: 70px;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 8px;
+}
+
+.sidebar nav ul li a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* ✅ ESTILO DEL BOTÓN ACTIVO */
+.sidebar nav ul li a.active {
+  background-color: white;
+  color: #074aad;
+  font-weight: bold;
+  border-left: 4px solid #074aad;
+}
+
+.sidebar .icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* ✅ FOOTER DEL SIDEBAR */
+.sidebar-footer {
+  padding: 15px 20px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  /* ✅ Gradiente institucional */
+  background: linear-gradient(135deg, #074aad, #9abef5, #074aad);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 101;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-muni,
+.logo-app {
+  height: 40px;
+  object-fit: contain;
+}
+
+.user-greeting {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-logout {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #c62828;
+}
+
+.main-area {
+  flex: 1;
+  margin-left: 240px;
+  padding: 80px 20px 20px; /* ✅ Reducido padding */
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 60px);
+}
+
+/* =============================================
+   CONTENIDO DE CÁMARAS
+============================================= */
+.camaras-container {
+  max-width: 100%; /* ✅ Ocupa todo el ancho */
+  margin: 0;
+  padding: 20px; /* ✅ Reducido padding */
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.camaras-container h2 {
+  margin-bottom: 20px;
+  color: #074aad;
+  font-weight: 600;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.filters input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filters input:focus {
+  border-color: #074aad;
+  box-shadow: 0 0 0 2px rgba(7, 74, 173, 0.1);
+}
+
+.camaras-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.camara-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-height: 160px;
+  font-size: 16px;
+}
+
+.camara-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.camara-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #555;
+}
+
+.nombre {
+  font-weight: 600;
+  color: #074aad;
+}
+
+.fecha {
+  color: #777;
+}
+
+.camara-body p {
+  margin: 6px 0;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.camara-body strong {
+  color: #074aad;
+  font-weight: 600;
+}
+
+.camara-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.id {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  background-color: #6c757d;
+  text-align: center;
+}
+
+/* =============================================
+   RESPONSIVE
+============================================= */
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 15px;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    top: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .main-area {
+    margin-left: 0;
+    padding: 70px 10px 10px;
+  }
+
+  .camaras-container {
+    padding: 15px;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .camara-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}

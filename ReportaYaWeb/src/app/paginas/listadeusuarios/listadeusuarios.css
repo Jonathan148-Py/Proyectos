@@ -1,0 +1,452 @@
+/* =============================================
+   LISTA DE USUARIOS — Estilo coherente con el resto de la app
+============================================= */
+
+.main-content {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.sidebar {
+  width: 240px;
+  background: linear-gradient(135deg, #074aad, #9abef5, #074aad);
+  color: white;
+  padding: 20px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  height: 100vh;
+  top: 70px;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 8px;
+}
+
+.sidebar nav ul li a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.sidebar nav ul li a.active {
+  background-color: white;
+  color: #074aad;
+  font-weight: bold;
+  border-left: 4px solid #074aad;
+}
+
+.sidebar .icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.sidebar-footer {
+  padding: 15px 20px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: linear-gradient(135deg, #074aad, #9abef5, #074aad);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 101;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-muni,
+.logo-app {
+  height: 40px;
+  object-fit: contain;
+}
+
+.user-greeting {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+}
+
+.btn-logout {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #c62828;
+}
+
+.main-area {
+  flex: 1;
+  margin-left: 240px;
+  padding: 90px 30px 30px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 60px);
+}
+
+.lista-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.lista-container h2 {
+  margin-bottom: 25px;
+  color: #074aad;
+  font-weight: 600;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* =============================================
+   FILTROS — mismo estilo que en Multas
+============================================= */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.filters input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filters input:focus {
+  border-color: #074aad;
+  box-shadow: 0 0 0 2px rgba(7, 74, 173, 0.1);
+}
+
+/* Pestañas */
+.tabs {
+  display: flex;
+  gap: 2px;
+  background-color: #f8f9fa;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  width: fit-content;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tab-btn:hover {
+  background-color: #e9ecef;
+}
+
+.tab-btn.active {
+  background-color: #074aad;
+  color: white;
+}
+
+/* Lista de usuarios */
+.usuarios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.usuarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* Tarjeta de usuario mejorada */
+.usuario-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-height: 180px;
+  display: flex;
+  gap: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+}
+
+.usuario-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.usuario-avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: #eef4ff;
+  border-radius: 50%;
+  color: #1a73e8;
+  font-size: 20px;
+}
+
+.usuario-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  max-width: 220px;
+}
+
+.usuario-nombre-rango {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.usuario-nombre-rango strong {
+  color: #074aad;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.usuario-rango {
+  background-color: #eef4ff;
+  color: #1a73e8;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.usuario-contacto {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 4px;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.usuario-id {
+  color: #888;
+  font-size: 13px;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+/* Acciones (estado + botón) */
+.usuario-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 130px;
+}
+
+.usuario-estado {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.estado-bloqueado {
+  color: #d32f2f;
+}
+
+.estado-activo {
+  color: #2e7d32;
+}
+
+.btn-bloquear {
+  background-color: white;
+  color: #074aad;
+  border: 2px solid #074aad;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-bloquear:hover:not(:disabled) {
+  background-color: #f0f7ff;
+  transform: translateY(-1px);
+}
+
+.btn-bloquear:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  border-color: #ddd;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.cargando,
+.no-usuarios {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+  font-size: 17px;
+  grid-column: 1 / -1;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    top: 0;
+    margin-bottom: 20px;
+  }
+
+  .main-area {
+    margin-left: 0;
+    padding: 70px 15px 30px;
+  }
+
+  .lista-container {
+    padding: 20px;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    width: 100%;
+  }
+
+  .tab-btn {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  .usuarios-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .usuario-card {
+    flex-direction: column;
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .usuario-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    align-self: flex-start;
+  }
+
+  .usuario-info {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .usuario-nombre-rango strong,
+  .usuario-contacto,
+  .usuario-id {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    font-size: 14px;
+  }
+
+  .usuario-acciones {
+    min-width: auto;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .btn-bloquear {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .usuario-estado {
+    font-size: 13px;
+    text-align: left;
+  }
+}

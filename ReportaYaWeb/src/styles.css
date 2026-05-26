@@ -1,0 +1,17 @@
+/* 🌎 Fondo general */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* 🔹 Importante: garantiza que el mapa calcule bien su tamaño */
+  font-family: 'League Spartan', sans-serif;
+  background: linear-gradient(135deg, #58a2f7 0%, #ffffff 100%);
+}
+
+/* 🔹 El app-root debe ocupar toda la pantalla */
+app-root {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+/* 🔹 Navbar global (para otras páginas también) */

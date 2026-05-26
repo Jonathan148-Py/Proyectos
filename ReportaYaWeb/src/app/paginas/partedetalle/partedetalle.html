@@ -1,0 +1,200 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="assets/Logo-San-Bernardo.png" alt="Municipalidad de San Bernardo" class="logo-muni" />
+    <img src="assets/logo.png" alt="Sistema de Alertas" class="logo-app" />
+  </div>
+
+  <div class="user-greeting">
+    <span style="color: white">Bienvenido, <strong>{{ usuarioActual?.nombre || 'Usuario' }}</strong> ({{ usuarioActual?.rango || 'Invitado' }})</span>
+    <button class="btn-logout" (click)="cerrarSesion()">🚪 Cerrar Sesión</button>
+  </div>
+</header>
+
+<div class="main-content">
+  <!-- MENÚ LATERAL -->
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li>
+          <a [routerLink]="['/menu']" routerLinkActive="active">
+            <span class="icon">🏠</span> Menú
+          </a>
+        </li>
+        <li *ngIf="puedeVer('alertasvecinales')">
+          <a [routerLink]="['/alertasvecinales']" routerLinkActive="active">
+            <span class="icon">🚨</span> Alertas Vecinales
+          </a>
+        </li>
+        <li *ngIf="puedeVer('camarassolicitadas')">
+          <a [routerLink]="['/camarassolicitadas']" routerLinkActive="active">
+            <span class="icon">📹</span> Cámaras Solicitadas
+          </a>
+        </li>
+        <li *ngIf="puedeVer('mapa')">
+          <a [routerLink]="['/mapa']" routerLinkActive="active">
+            <span class="icon">🗺️</span> Mapa en Vivo
+          </a>
+        </li>
+        <li *ngIf="puedeVer('multas')">
+          <a [routerLink]="['/multas']" routerLinkActive="active">
+            <span class="icon">💰</span> Multas
+          </a>
+        </li>
+        <li *ngIf="puedeVer('crearusuario')">
+          <a [routerLink]="['/crearusuario']" routerLinkActive="active">
+            <span class="icon">👥</span> Crear Usuario
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/listadeusuarios']" routerLinkActive="active">
+            <span class="icon">📋</span> Lista de Usuarios
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- ✅ FOOTER DEL SIDEBAR -->
+    <div class="sidebar-footer">
+      <p>By <strong>ReportaYa</strong></p>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-area">
+    <div class="detalle-container">
+      <div class="detalle-header">
+        <h2>
+          <span class="icon">💰</span> Detalle de Parte
+        </h2>
+        <div class="actions-toolbar">
+          <button class="btn-secondary" (click)="volver()">
+            ← Volver
+          </button>
+          <button class="btn-danger" (click)="eliminarMulta(multa?.id)" *ngIf="esAdmin()">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+
+      <!-- PESTAÑAS -->
+      <div class="tabs-container">
+        <div class="tabs">
+          <button class="tab-btn" [class.active]="tabActual === 'general'" (click)="cambiarTab('general')">
+            <span class="icon">📋</span> General
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'imagenes'" (click)="cambiarTab('imagenes')">
+            <span class="icon">📷</span> Imágenes
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'creador'" (click)="cambiarTab('creador')">
+            <span class="icon">👤</span> Creador
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'comentarios'" (click)="cambiarTab('comentarios')">
+            <span class="icon">💬</span> Comentarios
+          </button>
+          <button class="tab-btn" [class.active]="tabActual === 'acciones'" (click)="cambiarTab('acciones')" *ngIf="esAdmin()">
+            <span class="icon">🔧</span> Acciones
+          </button>
+        </div>
+
+        <!-- CONTENIDO DE CADA PESTAÑA -->
+        <div class="tab-content">
+          <!-- PESTAÑA: General -->
+          <div *ngIf="tabActual === 'general'" class="tab-pane">
+            <div class="field">
+              <label>ID:</label>
+              <span class="value monospace">{{ multa?.id || 'N/A' }}</span>
+            </div>
+            <div class="field">
+              <label>Fecha:</label>
+              <span class="value">{{ multa?.fechaFormateada || 'No disponible' }}</span>
+            </div>
+            <div class="field">
+              <label>Ubicación:</label>
+              <span class="value">{{ multa?.ubicacion || 'No especificada' }}</span>
+            </div>
+            <div class="field">
+              <label>Patente:</label>
+              <span class="value">{{ multa?.patente || 'No especificada' }}</span>
+            </div>
+            <div class="field">
+              <label>Marca:</label>
+              <span class="value">{{ multa?.marca || 'No especificada' }}</span>
+            </div>
+            <div class="field">
+              <label>Color:</label>
+              <span class="value">{{ multa?.color || 'No especificado' }}</span>
+            </div>
+            <div class="field">
+              <label>Tipo:</label>
+              <span class="value">{{ multa?.tipo || 'No especificado' }}</span>
+            </div>
+            <div class="field">
+              <label>Infracción:</label>
+              <span class="value">{{ multa?.infraccion || 'No especificada' }}</span>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Imágenes -->
+          <div *ngIf="tabActual === 'imagenes'" class="tab-pane">
+            <div class="foto-container" *ngIf="multa?.fotos && multa.fotos.length > 0">
+              <div *ngFor="let foto of multa.fotos; let i = index" class="foto-item">
+                <div class="foto-caption">
+                  <span *ngIf="i === 0">Imagen del parte</span>
+                  <span *ngIf="i === 1">Imagen del vehículo</span>
+                  <span *ngIf="i === 2">Imagen de la patente</span>
+                  <span *ngIf="i > 2">Imagen adicional {{ i + 1 }}</span>
+                </div>
+                <img [src]="foto" alt="Foto del parte" class="foto-grande" />
+              </div>
+            </div>
+            <div class="no-foto" *ngIf="!(multa?.fotos?.length > 0)">
+              <span>📷 Sin imágenes disponibles</span>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Creador -->
+          <div *ngIf="tabActual === 'creador'" class="tab-pane">
+            <div class="field">
+              <label>Nombre del creador:</label>
+              <span class="value">{{ usuarioNombre || 'Desconocido' }}</span>
+            </div>
+            <div class="field">
+              <label>UID:</label>
+              <span class="value monospace">{{ multa?.usuarioUID || 'N/A' }}</span>
+            </div>
+            <div class="field">
+              <label>Email:</label>
+              <span class="value">{{ multa?.usuarioEmail || 'Sin correo' }}</span>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Comentarios -->
+          <div *ngIf="tabActual === 'comentarios'" class="tab-pane">
+            <div class="field">
+              <label>Comentarios:</label>
+              <textarea
+                [(ngModel)]="multa.comentarios"
+                (input)="guardarCambios('comentarios')"
+                [disabled]="!esAdmin()"
+                rows="4"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: Acciones -->
+          <div *ngIf="tabActual === 'acciones'" class="tab-pane">
+            <div class="acciones-content">
+              <h4>Acciones Administrativas</h4>
+              <div class="accion-item">
+                <p>Eliminar este parte</p>
+                <button class="btn-danger" (click)="eliminarMulta(multa?.id)">
+                  🗑️ Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
