@@ -1,59 +1,45 @@
-# ReportaYa
+# 🚨 ReportaYa Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.3.
+**ReportaYa** es una plataforma web de gestión comunitaria y seguridad ciudadana orientada a la comuna de San Bernardo, Chile. El sistema permite la gestión y visualización de reportes de incidentes, multas, alertas vecinales y el monitoreo de solicitudes de cámaras de seguridad en tiempo real.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Características Principales
+
+*   **🗺️ Mapa Interactivo Comunal:** Visualización de zonas e incidentes basada en capas geográficas (Plan Regulador Comunal mediante archivos GeoJSON).
+*   **🔔 Sistema de Alertas Vecinales:** Creación, filtrado y visualización detallada de alarmas comunitarias e incidentes de seguridad.
+*   **🎫 Gestión de Infracciones:** Módulo para la revisión detallada de multas y partes emitidos.
+*   **👥 Administración de Usuarios:** Panel de control para el registro, listado y gestión de roles/usuarios de la plataforma.
+*   **🔒 Seguridad y Accesos:** Rutas protegidas mediante Guards para garantizar que solo usuarios autenticados ingresen al sistema.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+*   **Framework Principal:** [Angular](https://angular.dev/) (Versión 18+)
+*   **Base de Datos y Autenticación:** [Firebase](https://firebase.google.com/) (Autenticación y almacenamiento de datos en tiempo real)
+*   **Geolocalización:** Datos geoespaciales estructurados en formato GeoJSON para mapeo local.
+
+---
+
+## 📁 Estructura del Proyecto
+
+El código fuente se encuentra organizado bajo una arquitectura modular limpia dentro de la carpeta `/src/app`:
+
+*   `📁 paginas/`: Contiene los componentes de pantalla completa (Login, Inicio, Alertas, Multas, Cámaras, Mapa y Gestión de Usuarios).
+*   `📁 servicios/`: Lógica de comunicación con Firebase y manejo de datos compartidos (Alertas y Usuarios).
+*   `📁 guards/`: Guardianes de ruta encargados de la seguridad y autenticación del sitio.
+*   `📁 assets/`: Recursos visuales de la aplicación, mapas comunales en GeoJSON e imágenes de interfaz.
+
+---
+
+## 💻 Desarrollo Local
+
+Este proyecto fue generado con [Angular CLI](https://github.com/angular/angular-cli).
+
+### Servidor de Desarrollo
+
+Para levantar el proyecto localmente, ejecuta en la terminal:
 
 ```bash
 ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
